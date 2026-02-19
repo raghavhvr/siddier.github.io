@@ -108,6 +108,7 @@
 .reveal {
   opacity: 0;
   transform: translateY(40px);
+  pointer-events: none;        /* don't block clicks while invisible */
   transition: opacity var(--duration-slow) var(--ease-out-expo),
               transform var(--duration-slow) var(--ease-out-expo);
 }
@@ -119,6 +120,7 @@
 .reveal.visible {
   opacity: 1;
   transform: translateY(0) translateX(0) scale(1);
+  pointer-events: auto;        /* restore clicks once visible */
 }
 
 /* Stagger delays for children */

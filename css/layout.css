@@ -8,6 +8,8 @@
   inset: 0;
   z-index: var(--z-scene);
   pointer-events: none;
+  /* Fallback gradient shown before/if WebGL loads */
+  background: radial-gradient(ellipse at 20% 20%, #0d1f4a 0%, #04071a 40%, #01020a 100%);
 }
 
 /* ── Main Scroll Container ── */
