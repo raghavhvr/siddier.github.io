@@ -10,8 +10,8 @@ const CONFIG = {
     name:       'Raghavendra Siddi Reddy',
     nameShort:  'Raghavendra',
     nameLast:   'Siddi Reddy',
-    title:      'Data & AI Leader',
-    tagline:    'Turning messy data into decisions that matter.',
+    title:      'Data Science Consultant',
+    tagline:    'Independent consultant turning messy data into decisions that matter.',
     email:      'raghavhvr@outlook.com',
     phone_in:   '+91 98850 65637',
     phone_uae:  '+971 58580 6565',
@@ -83,6 +83,17 @@ const CONFIG = {
 
   /* ── Career Timeline ── */
   career: [
+    {
+      date:     'Oct 2025 – Present',
+      role:     'Freelance Data Science Consultant',
+      company:  'Independent · Remote',
+      color:    '#d4a843',
+      impacts:  [
+        'End-to-end ML and data platform consulting for clients across MENA and South Asia',
+        'Designing and deploying GenAI solutions, predictive models, and analytics infrastructure',
+        'Advisory on data strategy, governance, and AI transformation roadmaps',
+      ],
+    },
     {
       date:     'Mar 2024 – Sep 2025',
       role:     'Director, Data Architecture',

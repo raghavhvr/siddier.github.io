@@ -333,8 +333,8 @@ const DOM = {
             Let's Build<br><em>Something Real</em>
           </h2>
           <p class="section-body" style="margin:0 auto var(--space-xl);text-align:center;max-width:500px;">
-            Open to Director / Head of Data roles, ML consulting, and AI transformation
-            partnerships. Two continents. Always reachable.
+            Open to freelance data science and ML consulting engagements, advisory roles,
+            and AI transformation partnerships. Two continents. Always reachable.
           </p>
           <div class="contact-links" style="justify-content:center;">
             <a class="contact-link" href="mailto:${p.email}"><span>Email Me</span></a>

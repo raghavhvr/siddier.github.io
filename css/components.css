@@ -303,6 +303,8 @@
 input[type="range"] {
   width: 100%;
   -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   height: 2px;
   background: rgba(56,200,232,0.15);
   border-radius: 1px;
