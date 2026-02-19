@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Raghavendra Siddi Reddy — Data & AI Leader</title>
+  <meta name="description" content="Portfolio of Raghavendra Siddi Reddy — Data & AI Leader with 10+ years delivering enterprise ML and data platform transformation.">
+
+  <!-- Fonts — with system fallbacks -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+
+  <!-- Styles (order matters) -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <style>
+    /* Font fallbacks if Google Fonts unavailable */
+    body {
+      font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Courier New', monospace;
+    }
+    .t-display, .section-heading, .entry-name, .stat-block .num,
+    .timeline-role, .card-title, .result-value, .chapter-number,
+    .contact-title, .impact-num, #hud-logo, .nav-logo {
+      font-family: 'Cormorant Garamond', 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ── Atmosphere ── -->
+  <div id="grain"></div>
+  <div id="scanlines"></div>
+  <div id="page-transition"></div>
+
+  <!-- ── Custom Cursor ── -->
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- ── Three.js Canvas (fixed background) ── -->
+  <canvas id="space-canvas"></canvas>
+
+  <!-- ── Entry / Launch Screen ── -->
+  <div id="entry"></div>
+
+  <!-- ── HUD Overlay (fixed) ── -->
+  <div id="hud"></div>
+
+  <!-- ── Side Journey Progress ── -->
+  <div id="journey-progress"></div>
+
+  <!-- ── Main Scroll Content ── -->
+  <main id="scroll-container"></main>
+
+  <!-- ── Footer ── -->
+  <footer id="footer"
+    style="position:relative;z-index:10;padding:32px var(--gutter);
+           border-top:1px solid rgba(255,255,255,0.04);
+           display:flex;justify-content:space-between;
+           font-size:0.58rem;letter-spacing:0.1em;color:var(--text-dim);">
+  </footer>
+
+  <!-- ── Scripts (order matters) ── -->
+  <!-- 1. Three.js (vendor, no external CDN) -->
+  <script src="js/vendor.js"></script>
+
+  <!-- 2. Data & Config -->
+  <script src="js/config.js"></script>
+
+  <!-- 3. Modules -->
+  <script src="js/scene.js"></script>
+  <script src="js/hud.js"></script>
+  <script src="js/journey.js"></script>
+  <script src="js/demos.js"></script>
+
+  <!-- 4. Main orchestrator (builds DOM, then boots everything) -->
+  <script src="js/main.js"></script>
+
+  <!-- 5. Boot sequence -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+      // Fade out page transition overlay
+      const overlay = document.getElementById('page-transition');
+      setTimeout(() => overlay?.classList.add('done'), 100);
+
+      // Boot 3D scene
+      Scene.init();
+
+      // Init HUD (requires DOM from main.js)
+      HUD.init();
+
+      // Init scroll journey
+      Journey.init();
+
+      // Init ML demos
+      Demos.init();
+
+      // Init orb (after DOM exists)
+      setTimeout(() => Scene.initOrb(), 200);
+
+      // Wire up SQL query buttons (after DOM built)
+      setTimeout(() => {
+        document.querySelectorAll('.query-btn').forEach((btn, i) => {
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('.query-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            Demos.init && window.runQuery && window.runQuery(i, btn);
+          });
+        });
+
+        // CLV inputs live update
+        ['clv-purchases','clv-aov','clv-recency','clv-tenure'].forEach(id => {
+          document.getElementById(id)?.addEventListener('input', () => window.updateCLV?.());
+        });
+
+        // ROAS sliders live update
+        ['slider-search','slider-social','slider-email'].forEach(id => {
+          document.getElementById(id)?.addEventListener('input', () => window.updateROAS?.());
+        });
+
+        // Re-init demos now that DOM is confirmed built
+        Demos.init();
+      }, 400);
+
+    });
+  </script>
+
+</body>
+</html>

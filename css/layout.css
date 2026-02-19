@@ -1,0 +1,331 @@
+/* ═══════════════════════════════════════════════
+   LAYOUT — Canvas, Sections, Chapters, Grid
+═══════════════════════════════════════════════ */
+
+/* ── Three.js Canvas ── */
+#space-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-scene);
+  pointer-events: none;
+}
+
+/* ── Main Scroll Container ── */
+#scroll-container {
+  position: relative;
+  z-index: var(--z-content);
+}
+
+/* ── Chapter Sections ── */
+.chapter {
+  position: relative;
+  min-height: 100vh;
+  padding: var(--section-pad) var(--gutter);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.chapter-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Chapter color theming */
+.chapter[data-chapter="1"] { --chapter-color: var(--ch1-color); }
+.chapter[data-chapter="2"] { --chapter-color: var(--ch2-color); }
+.chapter[data-chapter="3"] { --chapter-color: var(--ch3-color); }
+.chapter[data-chapter="4"] { --chapter-color: var(--ch4-color); }
+.chapter[data-chapter="5"] { --chapter-color: var(--ch5-color); }
+
+/* ── Entry Screen ── */
+#entry {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  background: var(--void);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xl);
+  text-align: center;
+  transition: opacity 1.4s var(--ease-in-expo), transform 1.4s var(--ease-in-expo);
+}
+
+#entry.launched {
+  opacity: 0;
+  transform: scale(1.1);
+  pointer-events: none;
+}
+
+.entry-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 3rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+}
+
+.entry-name {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 9vw, 8rem);
+  font-weight: 300;
+  color: var(--star-white);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.entry-name span {
+  color: var(--gold);
+  font-style: italic;
+}
+
+.entry-subtitle {
+  font-size: 0.7rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.launch-btn {
+  position: relative;
+  padding: 18px 52px;
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  cursor: pointer;
+  overflow: hidden;
+  transition: color 0.4s, background 0.4s;
+}
+
+.launch-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gold);
+  transform: translateX(-101%);
+  transition: transform 0.4s var(--ease-out-expo);
+}
+
+.launch-btn:hover::before { transform: translateX(0); }
+.launch-btn:hover { color: var(--void); }
+
+.launch-btn span { position: relative; z-index: 1; }
+
+/* ── HUD (Heads-Up Display) ── */
+#hud {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-hud);
+  pointer-events: none;
+}
+
+#hud-top {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  padding: 20px var(--gutter);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: linear-gradient(to bottom, rgba(1,2,10,0.85) 0%, transparent 100%);
+  animation: hudIn 0.8s var(--ease-out-expo) 2.5s both;
+}
+
+#hud-logo {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  pointer-events: all;
+  cursor: pointer;
+}
+
+#hud-nav {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  pointer-events: all;
+}
+
+.hud-nav-item {
+  font-size: 0.58rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud-nav-item::before {
+  content: '';
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.4;
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.hud-nav-item:hover,
+.hud-nav-item.active {
+  color: var(--gold);
+}
+
+.hud-nav-item.active::before {
+  opacity: 1;
+  transform: scale(1.5);
+  background: var(--gold);
+}
+
+/* ── Journey Progress ── */
+#journey-progress {
+  position: fixed;
+  right: 28px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: var(--z-hud);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  pointer-events: all;
+}
+
+.progress-node {
+  position: relative;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--text-dim);
+  cursor: pointer;
+  transition: transform 0.3s var(--ease-bounce),
+              background 0.3s;
+}
+
+.progress-node::before {
+  content: attr(data-label);
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s;
+  font-family: var(--font-ui);
+}
+
+.progress-node:hover::before,
+.progress-node.active::before {
+  opacity: 1;
+}
+
+.progress-node.active {
+  background: var(--chapter-color, var(--gold));
+  transform: scale(1.6);
+  box-shadow: 0 0 12px var(--chapter-color, var(--gold));
+}
+
+.progress-node.visited {
+  background: var(--gold-dim);
+}
+
+.progress-line {
+  width: 1px;
+  height: 20px;
+  background: linear-gradient(to bottom, var(--text-dim), transparent);
+}
+
+/* ── Speed Indicator (bottom HUD) ── */
+#hud-bottom {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 16px var(--gutter);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  background: linear-gradient(to top, rgba(1,2,10,0.7) 0%, transparent 100%);
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  animation: hudIn 0.8s var(--ease-out-expo) 2.8s both;
+}
+
+#chapter-title-hud {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--text-secondary);
+  transition: color 0.6s;
+}
+
+/* ── Grid Helpers ── */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xl);
+  align-items: center;
+}
+
+.grid-2.reverse { direction: rtl; }
+.grid-2.reverse > * { direction: ltr; }
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+}
+
+/* ── Dividers ── */
+.chapter-divider {
+  height: 40vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.chapter-divider-line {
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(to bottom,
+    transparent,
+    var(--chapter-color, var(--gold-dim)) 50%,
+    transparent
+  );
+  position: absolute;
+  left: 50%;
+  animation: breathe 3s ease infinite;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .grid-2 { grid-template-columns: 1fr; gap: var(--space-lg); }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+  #journey-progress { display: none; }
+}
+
+@media (max-width: 640px) {
+  .grid-3 { grid-template-columns: 1fr; }
+  .grid-4 { grid-template-columns: 1fr 1fr; }
+  #hud-nav { gap: 16px; }
+  .chapter { padding: var(--space-2xl) var(--space-lg); }
+}
