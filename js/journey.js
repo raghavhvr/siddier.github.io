@@ -11,8 +11,22 @@ const Journey = (() => {
   function init() {
     chapterEls = Array.from(document.querySelectorAll('.chapter'));
     _setupReveal();
-    _onScroll();
+    // Small delay to let browser compute layout
+    setTimeout(() => {
+      _onScroll();
+      _forceVisibleInView();
+    }, 100);
     window.addEventListener('scroll', _handleScroll, { passive: true });
+  }
+
+  // Force any elements already in view to reveal immediately
+  function _forceVisibleInView() {
+    document.querySelectorAll('.reveal:not(.visible)').forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        el.classList.add('visible');
+      }
+    });
   }
 
   // ── Scroll Handler ────────────────────────────
@@ -105,7 +119,7 @@ const Journey = (() => {
     });
   }
 
-  return { init, scrollToChapter };
+  return { init, scrollToChapter, _forceVisibleInView };
 
 })();
 

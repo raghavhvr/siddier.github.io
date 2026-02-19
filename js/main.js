@@ -4,16 +4,42 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ── Build all DOM from CONFIG ──────────────────
+  // 1. Build all DOM from CONFIG first
   DOM.build();
 
-  // ── Cursor ────────────────────────────────────
+  // 2. Cursor
   Cursor.init();
 
-  // ── Entry screen ──────────────────────────────
+  // 3. Entry screen — locks scroll until dismissed
   Entry.init();
 
+  // 4. Wire up interactive demos NOW that DOM exists
+  _wireDemoEvents();
+
 });
+
+function _wireDemoEvents() {
+  // ROAS sliders
+  ['slider-search','slider-social','slider-email'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', () => window.updateROAS && window.updateROAS());
+  });
+
+  // SQL query buttons
+  document.querySelectorAll('.query-btn').forEach((btn, i) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.query-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      window.runQuery && window.runQuery(i, btn);
+    });
+  });
+
+  // CLV inputs
+  ['clv-purchases','clv-aov','clv-recency','clv-tenure'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', () => window.updateCLV && window.updateCLV());
+  });
+}
 
 // ═══════════════════════════════════════════════
 // DOM BUILDER
@@ -461,26 +487,45 @@ const Cursor = {
 // ENTRY SCREEN
 // ═══════════════════════════════════════════════
 const Entry = {
+  dismissed: false,
+
   init() {
     const el  = document.getElementById('entry');
     const btn = document.getElementById('launch-btn');
     if (!el) return;
 
-    // Remove entry after first scroll too
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 80) this._dismiss(el);
-    }, { once: true });
+    // CRITICAL: lock body scroll while entry is visible
+    // so scrolling behind it doesn't desync position
+    document.body.style.overflow = 'hidden';
 
-    if (btn) btn.addEventListener('click', () => this._dismiss(el));
+    // Dismiss on button click
+    if (btn) {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        this._dismiss(el);
+      });
+    }
 
-    // Auto-dismiss after 12s
-    setTimeout(() => this._dismiss(el), 12000);
+    // Auto-dismiss after 10s
+    setTimeout(() => this._dismiss(el), 10000);
   },
 
   _dismiss(el) {
+    if (this.dismissed) return;
+    this.dismissed = true;
+
+    // Re-enable scrolling and snap to top
+    document.body.style.overflow = '';
+    window.scrollTo(0, 0);
+
     el.classList.add('launched');
     setTimeout(() => {
       el.style.display = 'none';
-    }, 1600);
+      // Now that scroll is live, boot journey & demos
+      Journey.init();
+      Demos.init();
+      // Force reveal anything already in viewport
+      setTimeout(() => Journey._forceVisibleInView && Journey._forceVisibleInView(), 200);
+    }, 1400);
   }
 };
